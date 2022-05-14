@@ -11,7 +11,7 @@ Clock and timer for terminal using figlet font.
 
 * [lolcat](https://github.com/busyloop/lolcat) - to add colors
 * [mpv](https://mpv.io/) - to play alarm sound
-* [dzen2](https://github.com/minos-org/dzen2) - to show notifications
+* [dzen2](https://robm.github.io/dzen/) - to show notifications
 
 ## Usage
 
