@@ -13,7 +13,7 @@
 font="fraktur_mono"
 
 # audio file to play at the end
-alarm="$HOME/Alarms/Industrial alarm.hp3"
+alarm="$HOME/Alarms/Industrial alarm.mp3"
 
 # audio player
 player="mpv --no-terminal"
