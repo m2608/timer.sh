@@ -16,6 +16,7 @@ Clock and timer for terminal using figlet font.
 ## Usage
 
 Modify script according to your needs and then run it.
+Press Ctrl+C to exit.
 
 Show clock:
 
