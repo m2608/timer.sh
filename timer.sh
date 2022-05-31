@@ -33,11 +33,12 @@ if [ "$1" == "--help" ]; then
     exit 1
 fi
 
-# ^C reset cursor, clear screen and exit
-trap "printf '[?25h[2J' ; exit 0" INT
+# sigterm received (^C): show cursor, clear screen, disable alternative
+# buffer and exit
+trap "printf '[?25h[2J[?1049l' ; exit 0" INT
 
-# terminal size changed, clear screen
-trap "clear ; printf '[2J'" WINCH
+# terminal size changed: clear screen
+trap "printf '[2J'" WINCH
 
 get_text_cols()
 # returns number of columns in text
@@ -98,7 +99,7 @@ center_text()
         output_post=`printf "%s%*s\n" "$output_post" $cols ""`
     done
 
-    printf "[?25l[H%s%s%s" "$output_pref" "$output" "$output_post"
+    printf "[H%s%s%s" "$output_pref" "$output" "$output_post"
 }
 
 show_time()
@@ -149,9 +150,8 @@ show_time()
     fi
 }
 
-# hide cursor
-#clear
-printf "[?47h"
+# enable alternative buffer, clear screen, hide cursor
+printf "[?1049h[2J[?25l"
 
 if [ "$1" == "" ]; then
     # no arguments, show clock
@@ -208,5 +208,5 @@ else
     fi
 fi
 
-# show cursor, clear screen
-printf '[?25h\143'
+# show cursor, clear screen, disable alternative buffer
+printf '[?25h[2J[?1049l'
