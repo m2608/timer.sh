@@ -141,7 +141,7 @@ show_time()
     # count number rows in figlet output
     text_rows=`get_text_rows "$text"`
 
-    if test $text_cols -gt $cols -o $text_rows -gt $rows; then
+    if test $text_cols -ge $cols -o $text_rows -ge $rows; then
         text="$text_raw"
     fi
 
