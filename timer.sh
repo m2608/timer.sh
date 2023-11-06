@@ -23,7 +23,7 @@ notifier="dzen2 -p 5 -bg red -fg black -fn 'Terminus:size=13' -tw 160 -x 0 -y 20
 message="Time is up"
 
 # additional filter
-filter="lolcat"
+filter=lolcat
 
 # maximum possible terminal width
 max_cols=999
