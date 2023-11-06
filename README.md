@@ -5,7 +5,6 @@ Clock and timer for terminal using figlet font.
 ## Requirements
 
 * [figlet](http://www.figlet.org/) - to render nice ascii fonts
-* [bc](https://www.gnu.org/software/bc/) - to perform arithmetic calculations
 
 ## Optional
 
