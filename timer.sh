@@ -2,7 +2,6 @@
 
 # Requirements: 
 # figlet - ascii fonts
-# bc     - arithmetic 
 #
 # Optional:
 # mpv    - audio player
@@ -19,7 +18,7 @@ alarm="$HOME/Alarms/Industrial alarm.mp3"
 player="mpv --no-terminal"
 
 # notifier
-notifier="dzen2 -p 5 -bg red -fg black -fn 'Terminus:size=13' -tw 160 -x 0 -y 20"
+notifier="dzen2 -p 5 -bg red -fg black -fn 'Terminus:size=13' -tw 160 -x 0 -y 0"
 message="Time is up"
 
 # additional filter
@@ -59,7 +58,12 @@ get_text_rows()
 # return number rows in text
 # usage: get_text_rows "some multiline text"
 {
-    echo "$1" | wc -l | bc
+    text_rows=0
+    for line in $1; do
+        text_rows=$(( text_rows + 1 ))
+    done
+
+    echo $text_rows
 }
 
 center_text()
@@ -77,8 +81,8 @@ center_text()
 
     # fill left of the line with spaces to center numbers and
     # right side of the line to clear screen
-    fill_left=`echo "($cols-$text_cols)/2+1" | bc`
-    fill_right=`echo "$cols-$text_cols-$fill_left" | bc`
+    fill_left=$(( (cols - text_cols) / 2 + 1 ))
+    fill_right=$(( cols - text_cols - fill_left ))
 
     for line in $text; do
         output=`printf "%s\n%*s%s%*s" "$output" $fill_left "" "$line" $fill_right ""`
@@ -86,8 +90,8 @@ center_text()
 
     # count rows to print before (to center text vertically) and
     # after text (to clear screen).
-    pref=`echo "($rows-$text_rows)/2" | bc`
-    post=`echo "$rows-$text_rows-$pref-1" | bc`
+    pref=$(( (rows - text_rows) / 2 ))
+    post=$(( rows - text_rows - pref - 1 ))
 
     output_pref=""
     for i in `seq $pref`; do
@@ -157,10 +161,13 @@ if [ "$1" == "" ]; then
     # no arguments, show clock
 
     while true; do
-        curr_time=`date +%H:%M:%S`
-        h=`echo "$curr_time" | cut -d ':' -f 1 | bc`
-        m=`echo "$curr_time" | cut -d ':' -f 2 | bc`
-        s=`echo "$curr_time" | cut -d ':' -f 3 | bc`
+        # date without leading zeroes 
+        rest=`date "+%-H:%-M:%-S"`
+        h="${rest%%:*}"
+        rest="${rest#*:}"
+        m="${rest%%:*}"
+        rest="${rest#*:}"
+        s="${rest%%:*}"
 
         show_time "full" $h $m $s
 
@@ -170,23 +177,24 @@ else
     # argument present, show timer
 
     # convert time to seconds
-    period=`echo $1 \* 60 | bc`
+    period=$1
+    period=$(( period * 60 ))
     
     # get current timestamp
     timestamp=`date +%s`
-    timefinish=`echo "$timestamp+$period" | bc`
+    timefinish=$(( timestamp + period ))
     
     prev_time=0
     while true; do
-        time=`echo $timefinish-$timestamp | bc`
+        time=$(( timefinish - timestamp ))
     
         # redraw screen only if time changed
         if test $prev_time -ne $time; then
             prev_time=$time
     
-            h=`echo "$time / 3600"          | bc`
-            m=`echo "( $time % 3600 ) / 60" | bc`
-            s=`echo "$time % 60"            | bc`
+            h=$(( time / 3600 ))
+            m=$(( (time % 3600 ) / 60 ))
+            s=$(( time % 60 ))
     
             show_time "auto" $h $m $s
         fi
