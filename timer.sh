@@ -160,6 +160,7 @@ printf "[?1049h[2J[?25l"
 if [ "$1" == "" ]; then
     # no arguments, show clock
 
+    prev_time=0
     while true; do
         # date without leading zeroes 
         rest=`date "+%-H:%-M:%-S"`
@@ -169,7 +170,11 @@ if [ "$1" == "" ]; then
         rest="${rest#*:}"
         s="${rest%%:*}"
 
-        show_time "full" $h $m $s
+        time=$((h*3600+m*60+s))
+        if test $prev_time -ne $time; then
+            prev_time=$time
+            show_time "full" $h $m $s
+        fi
 
         sleep 0.1
     done
